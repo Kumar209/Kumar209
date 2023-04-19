@@ -15,6 +15,7 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 [![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Kumar209&theme=dracula)](https://github.com/anuraghazra/github-readme-stats)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Kumar209&langs_count=8)](https://github.com/anuraghazra/github-readme-stats)
 
 
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Kumar209&theme=blueberry&border_radius=5)](https://git.io/streak-stats)
