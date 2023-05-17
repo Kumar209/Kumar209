@@ -30,5 +30,6 @@
 
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Kumar209&theme=blueberry&border_radius=5)](https://git.io/streak-stats)
 
+<hr />
 
 [![](https://visitcount.itsvg.in/api?id=Kumar209&label=Profile%20Views&color=1&icon=0&pretty=true)](https://visitcount.itsvg.in)
