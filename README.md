@@ -28,7 +28,7 @@
 
 ![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Kumar209&show_icons=true&theme=tokyonight)
 
-[![GitHub Streak](https://streak-stats.demolab.com/?user=Kumar209)](https://git.io/streak-stats)
+[![GitHub Streak](https://streak-stats.demolab.com/?user=Kumar209&theme=tokyonight))](https://git.io/streak-stats)
 
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Kumar209&theme=blueberry&border_radius=5)](https://git.io/streak-stats)
 
