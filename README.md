@@ -17,7 +17,6 @@
 
 - 📫 How to reach me **prashantkumarlmp666@gmail.com**
 
-- ⚡ Fun fact **If I had to live in another country, I would choose South Korea.**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
