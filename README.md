@@ -11,7 +11,7 @@
 
 - 🌱 I’m currently learning **Development & DSA with C++**
 
-- 👨‍💻 All of my projects are available at [https://kumar209.github.io/Portfolio/](https://kumar209.github.io/Portfolio/)
+- 👨‍💻 All of my projects are available at [https://kumar209.github.io/Portfolio/](prashantdevportfolio.netlify.app)
 
 - 💬 Ask me about **JavaScript , ReactJS, Express.js**
 
