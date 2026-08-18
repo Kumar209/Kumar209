@@ -36,12 +36,12 @@
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/microsoftsqlserver/microsoftsqlserver-plain.svg" alt="sqlserver" width="40" height="40"/>
 </a> </p>
 
+<h2 align="center">📊 GitHub Activity</h2>
 
-![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Kumar209&show_icons=true&theme=tokyonight)
+<p align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=Kumar209&theme=tokyo-night&hide_border=true&area=true" width="95%" alt="GitHub Activity Graph"/>
+</p>
 
-
-[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Kumar209&theme=blueberry&border_radius=5)](https://git.io/streak-stats)
-
-<hr />
-
-[![](https://visitcount.itsvg.in/api?id=Kumar209&label=Profile%20Views&color=1&icon=0&pretty=true)](https://visitcount.itsvg.in)
+<p align="center">
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Kumar209&theme=tokyonight" width="95%" alt="GitHub Profile Summary"/>
+</p>
