@@ -3,7 +3,13 @@ const fs = require("fs");
 const USERNAME = "Kumar209";
 const OUTPUT_FILE = "github-stats.svg";
 
-const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
+const GITHUB_GRAPHQL_URL =
+  "https://api.github.com/graphql";
+
+
+// ============================================================
+// MAIN
+// ============================================================
 
 async function main() {
   const token = process.env.GH_PROFILE_TOKEN;
@@ -14,15 +20,23 @@ async function main() {
     );
   }
 
-  console.log(`Fetching GitHub data for ${USERNAME}...`);
+  console.log(
+    `Fetching GitHub data for ${USERNAME}...`
+  );
 
   const user = await fetchGitHubData(token);
 
   const svg = generateSVG(user);
 
-  fs.writeFileSync(OUTPUT_FILE, svg, "utf8");
+  fs.writeFileSync(
+    OUTPUT_FILE,
+    svg,
+    "utf8"
+  );
 
-  console.log(`Generated ${OUTPUT_FILE}`);
+  console.log(
+    `Generated ${OUTPUT_FILE}`
+  );
 }
 
 
@@ -33,9 +47,11 @@ async function main() {
 async function fetchGitHubData(token) {
   const query = `
     query($username: String!) {
+
       user(login: $username) {
 
         login
+
         name
 
         followers {
@@ -51,15 +67,19 @@ async function fetchGitHubData(token) {
           first: 100
           privacy: PUBLIC
         ) {
+
           totalCount
 
           nodes {
+
             name
+
             stargazerCount
 
             primaryLanguage {
               name
             }
+
           }
         }
 
@@ -80,17 +100,27 @@ async function fetchGitHubData(token) {
             weeks {
 
               contributionDays {
+
                 contributionCount
+
                 contributionLevel
+
                 color
+
                 date
+
                 weekday
+
               }
 
             }
+
           }
+
         }
+
       }
+
     }
   `;
 
@@ -102,15 +132,19 @@ async function fetchGitHubData(token) {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "User-Agent": "Kumar209-GitHub-Stats",
+        "User-Agent":
+          "Kumar209-GitHub-Stats",
       },
 
       body: JSON.stringify({
         query,
+
         variables: {
           username: USERNAME,
         },
+
       }),
+
     }
   );
 
@@ -120,21 +154,28 @@ async function fetchGitHubData(token) {
     );
   }
 
-  const result = await response.json();
+  const result =
+    await response.json();
 
   if (result.errors) {
-    console.error(result.errors);
+
+    console.error(
+      result.errors
+    );
 
     throw new Error(
       result.errors[0]?.message ||
         "GitHub GraphQL request failed."
     );
+
   }
 
   if (!result.data?.user) {
+
     throw new Error(
       `GitHub user "${USERNAME}" was not found.`
     );
+
   }
 
   return result.data.user;
@@ -142,10 +183,11 @@ async function fetchGitHubData(token) {
 
 
 // ============================================================
-// SVG GENERATOR
+// GENERATE SVG
 // ============================================================
 
 function generateSVG(user) {
+
   const contributions =
     user.contributionsCollection
       .contributionCalendar
@@ -179,25 +221,15 @@ function generateSVG(user) {
   const stars =
     user.repositories.nodes.reduce(
       (total, repository) =>
-        total + repository.stargazerCount,
+        total +
+        repository.stargazerCount,
       0
     );
 
-  const contributionDays =
-    user.contributionsCollection
-      .contributionCalendar
-      .weeks
-      .flatMap(
-        week => week.contributionDays
-      );
-
-  const contributionGraph =
-    generateContributionGraph(
-      contributionDays
+  const languages =
+    getTopLanguages(
+      user.repositories.nodes
     );
-
-  const name =
-    user.name || user.login;
 
   return `
 <svg
@@ -206,6 +238,10 @@ function generateSVG(user) {
   height="500"
   viewBox="0 0 1000 500"
 >
+
+  <!-- ====================================================== -->
+  <!-- DEFINITIONS -->
+  <!-- ====================================================== -->
 
   <defs>
 
@@ -216,6 +252,7 @@ function generateSVG(user) {
       x2="100%"
       y2="0%"
     >
+
       <stop
         offset="0%"
         stop-color="#7c3aed"
@@ -225,13 +262,35 @@ function generateSVG(user) {
         offset="100%"
         stop-color="#2563eb"
       />
+
+    </linearGradient>
+
+
+    <linearGradient
+      id="barGradient"
+      x1="0%"
+      y1="0%"
+      x2="100%"
+      y2="0%"
+    >
+
+      <stop
+        offset="0%"
+        stop-color="#7c3aed"
+      />
+
+      <stop
+        offset="100%"
+        stop-color="#3b82f6"
+      />
+
     </linearGradient>
 
   </defs>
 
 
   <!-- ====================================================== -->
-  <!-- BACKGROUND -->
+  <!-- CARD -->
   <!-- ====================================================== -->
 
   <rect
@@ -259,19 +318,20 @@ function generateSVG(user) {
 
 
   <!-- ====================================================== -->
-  <!-- HEADER -->
+  <!-- DEVELOPER SNAPSHOT -->
   <!-- ====================================================== -->
 
   <text
     x="45"
     y="52"
     fill="#ffffff"
-    font-size="26"
+    font-size="25"
     font-family="Arial, Helvetica, sans-serif"
     font-weight="700"
   >
-    ${escapeXML(name)}
+    Developer Snapshot
   </text>
+
 
   <text
     x="45"
@@ -280,7 +340,7 @@ function generateSVG(user) {
     font-size="15"
     font-family="Arial, Helvetica, sans-serif"
   >
-    @${escapeXML(user.login)} · GitHub Activity
+    Full Stack .NET Developer • C# • ASP.NET Core • Angular • React
   </text>
 
 
@@ -318,7 +378,7 @@ function generateSVG(user) {
 
 
   <!-- ====================================================== -->
-  <!-- SECONDARY STATS -->
+  <!-- ACTIVITY SUMMARY -->
   <!-- ====================================================== -->
 
   ${secondaryStat(
@@ -353,19 +413,20 @@ function generateSVG(user) {
 
 
   <!-- ====================================================== -->
-  <!-- CONTRIBUTION TITLE -->
+  <!-- TECHNOLOGIES -->
   <!-- ====================================================== -->
 
   <text
     x="45"
     y="300"
     fill="#ffffff"
-    font-size="17"
+    font-size="18"
     font-family="Arial, Helvetica, sans-serif"
     font-weight="700"
   >
-    Contribution Activity
+    Technologies Used
   </text>
+
 
   <text
     x="45"
@@ -374,46 +435,11 @@ function generateSVG(user) {
     font-size="13"
     font-family="Arial, Helvetica, sans-serif"
   >
-    ${contributions.toLocaleString()} contributions in the last year
+    Based on primary languages across public repositories
   </text>
 
 
-  <!-- ====================================================== -->
-  <!-- CONTRIBUTION GRAPH -->
-  <!-- ====================================================== -->
-
-  ${contributionGraph}
-
-
-  <!-- ====================================================== -->
-  <!-- LEGEND -->
-  <!-- ====================================================== -->
-
-  <text
-    x="790"
-    y="470"
-    fill="#8b949e"
-    font-size="11"
-    font-family="Arial, Helvetica, sans-serif"
-  >
-    Less
-  </text>
-
-  ${legendBox(830, 460, "#161b22")}
-  ${legendBox(845, 460, "#0e4429")}
-  ${legendBox(860, 460, "#006d32")}
-  ${legendBox(875, 460, "#26a641")}
-  ${legendBox(890, 460, "#39d353")}
-
-  <text
-    x="910"
-    y="470"
-    fill="#8b949e"
-    font-size="11"
-    font-family="Arial, Helvetica, sans-serif"
-  >
-    More
-  </text>
+  ${generateLanguageBars(languages)}
 
 
   <!-- ====================================================== -->
@@ -427,7 +453,19 @@ function generateSVG(user) {
     font-size="11"
     font-family="Arial, Helvetica, sans-serif"
   >
-    Generated automatically from GitHub data
+    Automatically generated from GitHub data
+  </text>
+
+
+  <text
+    x="955"
+    y="470"
+    fill="#6e7681"
+    font-size="11"
+    font-family="Arial, Helvetica, sans-serif"
+    text-anchor="end"
+  >
+    @Kumar209
   </text>
 
 </svg>
@@ -445,6 +483,7 @@ function statCard(
   label,
   value
 ) {
+
   return `
     <rect
       x="${x}"
@@ -489,6 +528,7 @@ function secondaryStat(
   label,
   value
 ) {
+
   return `
     <text
       x="${x}"
@@ -500,11 +540,12 @@ function secondaryStat(
       ${label}
     </text>
 
+
     <text
       x="${x}"
       y="247"
       fill="#ffffff"
-      font-size="22"
+      font-size="21"
       font-family="Arial, Helvetica, sans-serif"
       font-weight="700"
     >
@@ -515,106 +556,187 @@ function secondaryStat(
 
 
 // ============================================================
-// CONTRIBUTION GRAPH
+// TOP LANGUAGES
 // ============================================================
 
-function generateContributionGraph(days) {
-  const cellSize = 11;
-  const gap = 3;
+function getTopLanguages(
+  repositories
+) {
 
-  const startX = 45;
-  const startY = 350;
+  const languageCounts = {};
 
-  let svg = "";
 
-  days.forEach(
-    (day, index) => {
+  for (
+    const repository
+    of repositories
+  ) {
 
-      const week =
-        Math.floor(index / 7);
+    const language =
+      repository
+        .primaryLanguage
+        ?.name;
 
-      const weekday =
-        day.weekday ?? index % 7;
 
-      const x =
-        startX +
-        week * (cellSize + gap);
+    if (!language) {
+      continue;
+    }
+
+
+    languageCounts[language] =
+      (languageCounts[language] || 0) +
+      1;
+
+  }
+
+
+  const sortedLanguages =
+    Object.entries(
+      languageCounts
+    )
+
+      .sort(
+        (a, b) =>
+          b[1] - a[1]
+      )
+
+      .slice(0, 5);
+
+
+  const total =
+    sortedLanguages.reduce(
+      (sum, [, count]) =>
+        sum + count,
+      0
+    );
+
+
+  return sortedLanguages.map(
+    ([name, count]) => ({
+
+      name,
+
+      count,
+
+      percentage:
+        total > 0
+          ? Math.round(
+              (count / total) * 100
+            )
+          : 0,
+
+    })
+  );
+}
+
+
+// ============================================================
+// LANGUAGE BARS
+// ============================================================
+
+function generateLanguageBars(
+  languages
+) {
+
+  if (!languages.length) {
+
+    return `
+      <text
+        x="45"
+        y="365"
+        fill="#8b949e"
+        font-size="14"
+        font-family="Arial, Helvetica, sans-serif"
+      >
+        No language data available.
+      </text>
+    `;
+
+  }
+
+
+  let output = "";
+
+
+  languages.forEach(
+    (language, index) => {
 
       const y =
-        startY +
-        weekday * (cellSize + gap);
+        355 +
+        index * 23;
 
-      const color =
-        day.color ||
-        getContributionColor(
-          day.contributionLevel
+
+      const barWidth =
+        Math.max(
+          10,
+          language.percentage * 4.8
         );
 
-      svg += `
-        <rect
-          x="${x}"
+
+      output += `
+
+        <text
+          x="45"
           y="${y}"
-          width="${cellSize}"
-          height="${cellSize}"
-          rx="2.5"
-          fill="${color}"
+          fill="#c9d1d9"
+          font-size="12"
+          font-family="Arial, Helvetica, sans-serif"
+          font-weight="600"
         >
+          ${escapeXML(
+            language.name
+          )}
+        </text>
 
-          <title>
-            ${escapeXML(day.date)}:
-            ${day.contributionCount}
-            contribution${day.contributionCount === 1 ? "" : "s"}
-          </title>
 
-        </rect>
+        <rect
+          x="160"
+          y="${y - 11}"
+          width="480"
+          height="10"
+          rx="5"
+          fill="#161b22"
+        />
+
+
+        <rect
+          x="160"
+          y="${y - 11}"
+          width="${barWidth}"
+          height="10"
+          rx="5"
+          fill="url(#barGradient)"
+        />
+
+
+        <text
+          x="660"
+          y="${y}"
+          fill="#8b949e"
+          font-size="12"
+          font-family="Arial, Helvetica, sans-serif"
+        >
+          ${language.percentage}%
+        </text>
+
+
+        <text
+          x="720"
+          y="${y}"
+          fill="#6e7681"
+          font-size="11"
+          font-family="Arial, Helvetica, sans-serif"
+        >
+          ${language.count}
+          repo${language.count === 1 ? "" : "s"}
+        </text>
+
       `;
+
     }
   );
 
-  return svg;
-}
 
-
-// ============================================================
-// CONTRIBUTION COLORS
-// ============================================================
-
-function getContributionColor(level) {
-
-  const colors = {
-    NONE: "#161b22",
-    FIRST_QUARTILE: "#0e4429",
-    SECOND_QUARTILE: "#006d32",
-    THIRD_QUARTILE: "#26a641",
-    FOURTH_QUARTILE: "#39d353",
-  };
-
-  return (
-    colors[level] ||
-    "#161b22"
-  );
-}
-
-
-// ============================================================
-// LEGEND
-// ============================================================
-
-function legendBox(
-  x,
-  y,
-  color
-) {
-  return `
-    <rect
-      x="${x}"
-      y="${y}"
-      width="10"
-      height="10"
-      rx="2"
-      fill="${color}"
-    />
-  `;
+  return output;
 }
 
 
@@ -622,17 +744,49 @@ function legendBox(
 // XML ESCAPE
 // ============================================================
 
-function escapeXML(value) {
+function escapeXML(
+  value
+) {
+
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&apos;"
+    );
 }
 
 
-main().catch(error => {
-  console.error(error);
-  process.exit(1);
-});
+// ============================================================
+// RUN
+// ============================================================
+
+main().catch(
+  error => {
+
+    console.error(error);
+
+    process.exit(1);
+
+  }
+);
