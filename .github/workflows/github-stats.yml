@@ -1,0 +1,70 @@
+name: Update GitHub Stats
+
+on:
+  # Run whenever you update this profile repository
+  push:
+    branches:
+      - main
+
+  # Run automatically every hour
+  schedule:
+    - cron: "0 * * * *"
+
+  # Allows manual execution
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-stats:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      # ------------------------------------------------------
+      # Setup Node
+      # ------------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+
+      # ------------------------------------------------------
+      # Generate SVG
+      # ------------------------------------------------------
+
+      - name: Generate GitHub stats
+        env:
+          GH_PROFILE_TOKEN: ${{ secrets.GH_PROFILE_TOKEN }}
+        run: |
+          node scripts/generate-stats.js
+
+
+      # ------------------------------------------------------
+      # Commit generated SVG
+      # ------------------------------------------------------
+
+      - name: Commit updated stats
+        run: |
+
+          git config user.name "github-actions[bot]"
+
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add github-stats.svg
+
+          git diff --cached --quiet || git commit -m "Update GitHub stats"
+
+          git push
