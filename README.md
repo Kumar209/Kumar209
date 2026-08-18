@@ -39,9 +39,9 @@
 <h2 align="center">📊 GitHub Activity</h2>
 
 <p align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=Kumar209&theme=tokyo-night&hide_border=true&area=true" width="95%" alt="GitHub Activity Graph"/>
-</p>
-
-<p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Kumar209&theme=tokyonight" width="95%" alt="GitHub Profile Summary"/>
+  <img
+    src="./github-stats.svg"
+    alt="Kumar209 GitHub Activity"
+    width="900"
+  />
 </p>
